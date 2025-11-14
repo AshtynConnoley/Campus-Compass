@@ -46,7 +46,7 @@ TEST_CASE("Test 2", "[tag]") {
 // Note that while this works, I recommend also creating plenty of unit tests for particular functions within your code.
 // This pattern should only be used for final, end-to-end testing.
 
-// This uses C++ "raw strings" and assumes your PageRank outputs a string with
+// This uses C++ "raw strings" and assumes your CampusCompass outputs a string with
 //   the same thing you print.
 TEST_CASE("Example CampusCompass Output Test", "[flag]") {
   // the following is a "raw string" - you can write the exact input (without
@@ -77,7 +77,7 @@ unsuccessful
   CampusCompass c;
   c.parseInput(input)
   // this would be some function that sends the output from your class into a string for use in testing
-  actualOutput = g.getStringRepresentation()
+  actualOutput = c.getStringRepresentation()
   */
 
   REQUIRE(actualOutput == expectedOutput);
