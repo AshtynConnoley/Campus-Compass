@@ -23,6 +23,8 @@ add_executable(Main
         src/main.cpp # your main file
         src/CampusCompass.cpp
         src/CampusCompass.h
+        src/Students.cpp
+        src/Students.h
         # add your own header files below - should be automatically added in CLion
         # example (can also separate with newlines):
         # src/AVL.h src/AVL.cpp
