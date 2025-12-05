@@ -23,78 +23,6 @@ string CampusCompass::getStudentName(int ID) {
     return students[ID]->name;
 }
 
-bool CampusCompass::parseCSV(const string &edgeFile, const string &classFile) {
-    string line;
-    ifstream file = ifstream(edgeFile, ifstream::in);
-    if (!file.is_open()) {
-        cout << "Error opening file " << edgeFile << endl;
-        return false;
-    }
-    getline(file, line);
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string cell;
-        getline(ss, cell, ',');
-        int e1 = stoi(cell);
-        getline(ss, cell, ',');
-        int e2 = stoi(cell);
-        getline(ss, cell, ',');
-        if (locations.find(e1) != locations.end()) {
-            locations.insert({e1, cell});
-        }
-        getline(ss, cell, ',');
-        if (locations.find(e2) != locations.end()) {
-            locations.insert({e2, cell});
-        }
-        getline(ss, cell, ',');
-        int distance = stoi(cell);
-        edges.push_back({e1, e2, distance, 1}); // Last int signals if the road is available
-    }
-    file.close();
-
-
-    file = ifstream(classFile, ifstream::in);
-    if (!file.is_open()) {
-        cout << "Error opening file " << edgeFile << endl;
-        return false;
-    }
-    getline(file, line);
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string cell;
-        string code;
-        getline(ss, code, ',');
-        getline(ss, cell, ',');
-        classList[code] = stoi(cell);
-        getline(ss, cell, ',');
-        // int time1 = stoi(cell);
-        getline(ss, cell, ',');
-        // int time2 = stoi(cell);
-
-    }
-    file.close();
-
-    return true;
-}
-
-bool CampusCompass::parseCommand(const string &command) {
-    stringstream ss(command);
-    string word;
-    ss >> word;
-    if (word == "insert") {}
-    else if (word == "remove") {}
-    else if (word == "dropClass") {}
-    else if (word == "replaceClass") {}
-    else if (word == "removeClass") {}
-    else if (word == "toggleEdgeClosure") {}
-    else if (word == "checkEdgeStatus") {}
-    else if (word == "isConnected") {}
-    else if (word == "printShortestEdges") {}
-    else if (word == "printStudentZone") {}
-
-    return false;
-}
-
 bool CampusCompass::insert(string name, int ID, string locationID, const vector<string>& classes) {
     if (students.find(ID) != students.end()) {
         return false;
@@ -197,10 +125,39 @@ int CampusCompass::checkEdgeStatus(const string& location1, const string& locati
     return -1;
 }
 
-bool isConnected(string location1, string location2);
+bool CampusCompass::isConnected(string location1, string location2) {
+    std::unordered_set<int> visited;
+    std::queue<int> q;
+    q.push(stoi(location1));
+    visited.insert(stoi(location1));
+
+    while (!q.empty()) {
+        int curr = q.front();
+        q.pop();
+
+        if (curr == stoi(location2)) {
+            return true;
+        }
+
+        for (auto edge : edges) {
+            if ((edge[0] == curr && visited.find(edge[1]) == visited.end()) && edge[3] == true) {
+                q.push(edge[1]);
+                visited.insert(edge[1]);
+            }
+            else if (edge[1] == curr && visited.find(edge[0]) == visited.end() && edge[3] == true) {
+                q.push(edge[0]);
+                visited.insert(edge[0]);
+            }
+        }
+    }
+    return false;
+}
 
 vector<pair<string, int>> printShortestEdges(int ID); // Make sure to sort classes
 
 int minimumSpanningTree(vector<pair<int, int>> edges);
+
+
+
 
 

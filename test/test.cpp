@@ -3,32 +3,35 @@
 
 // change if you choose to use a different header name
 #include "CampusCompass.h"
+#include "Parser.h"
 using namespace std;
 
 TEST_CASE("Inavlid commands") {
     CampusCompass compass;
-    compass.parseCSV("../data/edges.csv", "../data/classes.csv");
+    Parser parser;
+    parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
 
     // invalid command
-    REQUIRE(compass.parseCommand("notReal \"Ashtyn\" 12341234 1 1 COP3530") == false);
+    REQUIRE(parser.parseCommand("notReal \"Ashtyn\" 12341234 1 1 COP3530", 1) == false);
 
     // invalid ID
-    REQUIRE(compass.parseCommand("insert \"Ashtyn\" 1234L234 1 1 COP3530") == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 1234L234 1 1 COP3530", 1) == false);
 
     // Invalid Name
-    REQUIRE(compass.parseCommand("insert \"Ashtyn3\" 12345678 1 1 COP3530") == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn3\" 12345678 1 1 COP3530", 1) == false);
 
     // Wrong number of classes
-    REQUIRE(compass.parseCommand("insert \"Ashtyn\" 12341234 1 2 COP3530") == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12341234 1 2 COP3530", 1) == false);
 
     // Invalid class codes
-    REQUIRE(compass.parseCommand("insert \"Ashtyn\" 12345678 1 1 cop3530") == false);
-    REQUIRE(compass.parseCommand("insert \"Ashtyn\" 12345678 1 1 COPP3530") == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 cop3530", 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 COPP3530", 1) == false);
 }
 
 TEST_CASE("Edge Cases") {
     CampusCompass compass;
-    compass.parseCSV("../data/edges.csv", "../data/classes.csv");
+    Parser parser;
+    parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
     bool insertion = compass.insert("Ashtyn", 12345678, "1", {"COP3530"});
     REQUIRE(insertion == true);
 
@@ -45,7 +48,8 @@ TEST_CASE("Edge Cases") {
 
 TEST_CASE("dropClass, removeClass, remove, and replaceClass") {
     CampusCompass compass;
-    compass.parseCSV("../data/edges.csv", "../data/classes.csv");
+    Parser parser;
+    parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
     REQUIRE(compass.insert("Brandon", 11110000, "1", {"COP3530", "COP3502", "COT3100"}) == true);
     REQUIRE(compass.insert("Sarah",   22220000, "2", {"COP3530", "COP3503"}) == true);;
 
@@ -66,7 +70,8 @@ TEST_CASE("dropClass, removeClass, remove, and replaceClass") {
 
 TEST_CASE("printShortestEdges test") {
     CampusCompass compass;
-    compass.parseCSV("../data/edges.csv", "../data/classes.csv");
+    Parser parser;
+    parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
 
     compass.insert("Ashtyn", 11111111, "43", {"PHY2048", "IDS2935"}); // PHY2048 only has 1 edge
 

@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class Parser;
+
 class CampusCompass {
 private:
     struct Student {
@@ -31,8 +33,8 @@ private:
 public:
     CampusCompass(); // constructor
     ~CampusCompass();
-    bool parseCSV(const string &edges_filepath, const string &classes_filepath);
-    bool parseCommand(const string &command);
+    friend class Parser;
+
     bool insert(string name, int ID, string location, const vector<string>& classes);
     bool remove(int ID);
     bool dropClass(int ID, const string& classCode);
