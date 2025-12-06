@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -43,9 +44,10 @@ public:
     bool toggleEdgeClosure(const string& location1, const string& location2);
     int checkEdgeStatus(const string& location1, const string& location2);
     bool isConnected(string location1, string location2);
+
+    pair<int, vector<int>> CampusCompass::dijkstra(int start, int end);
     vector<pair<string, int>> printShortestEdges(int ID);
-    int minimumSpanningTree(vector<pair<int, int>> edges);
-    string getStudentName(int ID);
+    bool CampusCompass::printStudentZone(int ID  );
 
 
 };
