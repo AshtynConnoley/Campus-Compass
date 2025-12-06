@@ -3,10 +3,14 @@
 
 #include <campusCompass.h>
 #include <regex>
-class Parser {
+#include <string>
+struct Parser {
 public:
-    bool parseCSV(const string &edges_filepath, const string &classes_filepath, CampusCompass& compass);
-    bool parseCommand(const string &command, bool isTest);
+    bool parseCSV(const string &edgeFile, const string &classFile, CampusCompass& compass);
+    int parseCommand(const string &command, CampusCompass& compass, bool isTest);
+    bool IDCheck(string ID);
+    bool nameCheck(string& name);
+    bool classCheck(string className);
 };
 
 

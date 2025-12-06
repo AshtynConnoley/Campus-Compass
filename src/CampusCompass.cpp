@@ -102,9 +102,9 @@ int CampusCompass::removeClass(const string& classCode) {
 }
 
 bool CampusCompass::toggleEdgeClosure(const string& location1, const string& location2) {
-    for (auto edge : edges) {
-        if ((edge[0] == stoi(location1) && edge[1] == stoi(location2)) || edge[0] == stoi(location2) || edge[1] == stoi(location1)) {
-            edge[3] == !edge[3];
+    for (auto& edge : edges) {
+        if ((edge[0] == stoi(location1) && edge[1] == stoi(location2)) || (edge[0] == stoi(location2) && edge[1] == stoi(location1))) {
+            edge[3] = !edge[3];
             return true;
         }
     }
@@ -255,7 +255,7 @@ bool CampusCompass::printStudentZone(int ID) {
 
     for (string& item : student->classes) {
         int locationID = classList[item];
-        pair<int, vector<int>> shortest = dijkstra(start, locationID); // Returns -1 if inaccessable
+        pair<int, vector<int>> shortest = dijkstra(start, locationID); // Returns -1 if inaccessible
         if (shortest.first == -1) {
             continue;
         }
@@ -269,7 +269,7 @@ bool CampusCompass::printStudentZone(int ID) {
     }
 
     // Need subgraph of the accessed edges
-    vector<vector<int>> subEdges;  // subEdges = e1, e2, length. Will filter out accessibility now.
+    vector<vector<int>> subEdges;  // subEdges = vertex1, vertex2, length. Will filter out accessibility now.
     for (auto &edge : edges) {
         if (edge[3] == false) continue; // Accessibility check
 
@@ -313,7 +313,7 @@ bool CampusCompass::printStudentZone(int ID) {
         }
     }
 
-    cout << "Student Zone Cost For " << student->name << ": " << cost << "\n";
+    cout << "Student Zone Cost For " << student->name << ": " << cost << endl;
     return true;
 }
 

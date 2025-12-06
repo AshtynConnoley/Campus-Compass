@@ -21,10 +21,12 @@ int main() {
     for (int i = 0; i < no_of_lines; i++) {
         getline(cin, command);
         // parse your commands however you see fit
-        bool validity = parser.parseCommand(command);
-        if (!validity) {
+        int validity = parser.parseCommand(command, compass, false);
+        if (validity == 0) {
             cout << "unsuccessful" << endl;
-            continue;
+        }
+        else if (validity == 1) {
+            cout << "successful" << endl;
         }
     }
 }

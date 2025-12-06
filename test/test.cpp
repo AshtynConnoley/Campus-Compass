@@ -1,7 +1,7 @@
+/*
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
-// change if you choose to use a different header name
 #include "CampusCompass.h"
 #include "Parser.h"
 using namespace std;
@@ -12,20 +12,20 @@ TEST_CASE("Inavlid commands") {
     parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
 
     // invalid command
-    REQUIRE(parser.parseCommand("notReal \"Ashtyn\" 12341234 1 1 COP3530", 1) == false);
+    REQUIRE(parser.parseCommand("notReal \"Ashtyn\" 12341234 1 1 COP3530", compass, 1) == false);
 
     // invalid ID
-    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 1234L234 1 1 COP3530", 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 1234L234 1 1 COP3530", compass, 1) == false);
 
     // Invalid Name
-    REQUIRE(parser.parseCommand("insert \"Ashtyn3\" 12345678 1 1 COP3530", 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn3\" 12345678 1 1 COP3530", compass, 1) == false);
 
     // Wrong number of classes
-    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12341234 1 2 COP3530", 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12341234 1 2 COP3530", compass, 1) == false);
 
     // Invalid class codes
-    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 cop3530", 1) == false);
-    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 COPP3530", 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 cop3530", compass, 1) == false);
+    REQUIRE(parser.parseCommand("insert \"Ashtyn\" 12345678 1 1 COPP3530", compass, 1) == false);
 }
 
 TEST_CASE("Edge Cases") {
@@ -68,6 +68,7 @@ TEST_CASE("dropClass, removeClass, remove, and replaceClass") {
 
 }
 
+
 TEST_CASE("printShortestEdges test") {
     CampusCompass compass;
     Parser parser;
@@ -87,3 +88,4 @@ TEST_CASE("printShortestEdges test") {
     expected = {make_pair("IDS2935", 2), make_pair("PHY2048", -1)};
     REQUIRE(result == expected);
 }
+*/

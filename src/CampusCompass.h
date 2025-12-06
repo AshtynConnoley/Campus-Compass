@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class Parser;
+struct Parser; // To use as friend class
 
 class CampusCompass {
 private:
@@ -34,9 +34,9 @@ private:
 public:
     CampusCompass(); // constructor
     ~CampusCompass();
-    friend class Parser;
+    friend struct Parser;
 
-    bool insert(string name, int ID, string location, const vector<string>& classes);
+    bool insert(string name, int ID, string locationID, const vector<string>& classes);
     bool remove(int ID);
     bool dropClass(int ID, const string& classCode);
     bool replaceClass(int ID, const string& classCode1, const string& classCode2); // replace 1 with 2
@@ -45,9 +45,9 @@ public:
     int checkEdgeStatus(const string& location1, const string& location2);
     bool isConnected(string location1, string location2);
 
-    pair<int, vector<int>> CampusCompass::dijkstra(int start, int end);
+    pair<int, vector<int>> dijkstra(int start, int end);
     vector<pair<string, int>> printShortestEdges(int ID);
-    bool CampusCompass::printStudentZone(int ID  );
+    bool printStudentZone(int ID  );
 
 
 };
