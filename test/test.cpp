@@ -2,12 +2,12 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
-#include "CampusCompass.h"
+#include "Graph.h"
 #include "Parser.h"
 using namespace std;
 
 TEST_CASE("Inavlid commands") {
-    CampusCompass compass;
+    Graph compass;
     Parser parser;
     parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
 
@@ -29,7 +29,7 @@ TEST_CASE("Inavlid commands") {
 }
 
 TEST_CASE("Edge Cases") {
-    CampusCompass compass;
+    Graph compass;
     Parser parser;
     parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
     bool insertion = compass.insert("Ashtyn", 12345678, "1", {"COP3530"});
@@ -47,7 +47,7 @@ TEST_CASE("Edge Cases") {
 }
 
 TEST_CASE("dropClass, removeClass, remove, and replaceClass") {
-    CampusCompass compass;
+    Graph compass;
     Parser parser;
     parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
     REQUIRE(compass.insert("Brandon", 11110000, "1", {"COP3530", "COP3502", "COT3100"}) == true);
@@ -70,7 +70,7 @@ TEST_CASE("dropClass, removeClass, remove, and replaceClass") {
 
 
 TEST_CASE("printShortestEdges test") {
-    CampusCompass compass;
+    Graph compass;
     Parser parser;
     parser.parseCSV("../data/edges.csv", "../data/classes.csv", compass);
 

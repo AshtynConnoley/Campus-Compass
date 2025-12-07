@@ -12,12 +12,13 @@
 #include <unordered_set>
 #include <queue>
 #include <algorithm>
+#include <climits>
 
 using namespace std;
 
 struct Parser; // To use as friend class
 
-class CampusCompass {
+class Graph {
 private:
     struct Student {
         string name;
@@ -27,13 +28,13 @@ private:
         Student(int ID, string name, string locationID, vector<string> classes);
     };
     vector<vector<int>> edges; // edge 1, edge 2, distance, road availability
-    map<string, int> classList;
-    map<int, string> locations;
+    unordered_map<string, int> classList;
+    unordered_map<int, string> locations;
     unordered_map<int, Student*> students; // students = name, locationID, classes with key = ID
 
 public:
-    CampusCompass(); // constructor
-    ~CampusCompass();
+    Graph(); // constructor
+    ~Graph();
     friend struct Parser;
 
     bool insert(string name, int ID, string locationID, const vector<string>& classes);

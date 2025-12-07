@@ -2,7 +2,7 @@
 #include "Parser.h"
 
 
-bool Parser::parseCSV(const string &edgeFile, const string &classFile, CampusCompass& compass) {
+bool Parser::parseCSV(const string &edgeFile, const string &classFile, Graph& compass) {
     string line;
     ifstream file = ifstream(edgeFile, ifstream::in);
     if (!file.is_open()) {
@@ -56,7 +56,7 @@ bool Parser::parseCSV(const string &edgeFile, const string &classFile, CampusCom
     return true;
 }
 
-int Parser::parseCommand(const string &command, CampusCompass& compass, bool isTest) {
+int Parser::parseCommand(const string &command, Graph& compass, bool isTest) {
     // This function returns true, false, -1 if success/fail has already been dealt with, or an int for removeClass
     stringstream ss(command);
     string word;
@@ -64,7 +64,9 @@ int Parser::parseCommand(const string &command, CampusCompass& compass, bool isT
 
     if (word == "insert") {
         string name;
-        ss >> name;
+        ss >> ws;
+        getline(ss, name, '"');
+        getline(ss, name, '"');
         bool isValid = nameCheck(name);
         if (!isValid) {
             return false;
@@ -183,14 +185,15 @@ int Parser::parseCommand(const string &command, CampusCompass& compass, bool isT
         if (!isTest) {
             int result;
             result = compass.removeClass(word);
-            return result;
+            cout << result << endl;
+            return -1;
         }
         return true;
     }
 
-    else if (word == "toggleEdgeClosure") {
-        int numEdges;
-        ss >> numEdges;
+    else if (word == "toggleEdgesClosure") {
+        ss >> word;
+        int numEdges = stoi(word);
         int counter = 0;
         while (ss >> word) {
             string vertex1 = word;
@@ -272,10 +275,6 @@ bool Parser::IDCheck(string ID) {
 }
 
 bool Parser::nameCheck(string& name) {
-    if (name[0] != '"' || name[name.size() - 1] != '"') {
-        return false;
-    }
-    name = name.substr(1, name.size() - 2);
     if (!regex_match(name, regex("^[A-Za-z ]+$"))) {
         return false;
     }

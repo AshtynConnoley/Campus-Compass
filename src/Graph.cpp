@@ -1,30 +1,30 @@
-#include "CampusCompass.h"
+#include "Graph.h"
 
 
 using namespace std;
 
-CampusCompass::CampusCompass() {
-    // initialize your object
+Graph::Graph() {
+    // Nothing really to initialize
 }
-CampusCompass::Student::Student(int ID, string name, string locationID, vector<string> classes) {
+Graph::Student::Student(int ID, string name, string locationID, vector<string> classes) {
     this->ID = ID;
     this->name = name;
     this->locationID = locationID;
     this->classes = classes;
 }
 
-CampusCompass::~CampusCompass() {
+Graph::~Graph() {
     for (auto item : students) {
         delete item.second;
     }
 }
 
-bool CampusCompass::insert(string name, int ID, string locationID, const vector<string>& classes) {
+bool Graph::insert(string name, int ID, string locationID, const vector<string>& classes) {
     if (students.find(ID) != students.end()) {
         return false;
     }
     for (auto item : classes) {
-        if (classList.find(item) == classList.end()) {
+        if (classList.find(item) == classList.end()) { // Make sure it's a real class
             return false;
         }
     }
@@ -32,7 +32,7 @@ bool CampusCompass::insert(string name, int ID, string locationID, const vector<
     return true;
 }
 
-bool CampusCompass::remove(int ID) {
+bool Graph::remove(int ID) {
     if (students.find(ID) == students.end()) {
         return false;
     }
@@ -41,7 +41,7 @@ bool CampusCompass::remove(int ID) {
     return true;
 }
 
-bool CampusCompass::dropClass(int ID, const string& classCode) {
+bool Graph::dropClass(int ID, const string& classCode) {
     if (students.find(ID) == students.end()) {
         return false;
     }
@@ -49,7 +49,7 @@ bool CampusCompass::dropClass(int ID, const string& classCode) {
     for (size_t i=0; i < curr->classes.size(); i++) {
         if (curr->classes[i] == classCode) {
             curr->classes.erase(curr->classes.begin() + i);
-            if (curr->classes.size() == 0) {
+            if (curr->classes.size() == 0) { // Deletion for empty classload
                 delete students[ID];
                 students.erase(ID);
             }
@@ -59,7 +59,7 @@ bool CampusCompass::dropClass(int ID, const string& classCode) {
     return false;
 }
 
-bool CampusCompass::replaceClass(int ID, const string& classCode1, const string& classCode2) { // replace 1 with 2
+bool Graph::replaceClass(int ID, const string& classCode1, const string& classCode2) { // replace 1 with 2
     if (students.find(ID) == students.end()) { // student exists
         return false;
     }
@@ -81,28 +81,38 @@ bool CampusCompass::replaceClass(int ID, const string& classCode1, const string&
     return false;
 }
 
-int CampusCompass::removeClass(const string& classCode) {
+int Graph::removeClass(const string& classCode) {
     int count = 0;
     if (classList.find(classCode) == classList.end()) {
         return 0;
     }
-    for (auto person : students) {
-        for (size_t i = 0; i < person.second->classes.size(); i++) {
-            if (person.second->classes[i] == classCode) {
-                person.second->classes.erase(person.second->classes.begin() + i);
-                if (person.second->classes.empty()) {
-                    delete students[person.first];
-                    students.erase(person.first);
-                }
-                count += 1;
+    auto studentIt = students.begin(); // Need to use an iterator to prevent gradescope segfault error
+    while (studentIt != students.end()) {
+        Student* student = studentIt->second;
+
+        auto classIt = student->classes.begin();
+        while (classIt != student->classes.end()) {
+            if (*classIt == classCode) {
+                classIt = student->classes.erase(classIt);
+                count+=1;
+            } else {
+                ++classIt;
             }
+        }
+
+        if (student->classes.empty()) { // Delete when no classes left
+            delete student;
+            studentIt = students.erase(studentIt);
+        } else {
+            ++studentIt;
         }
     }
     return count;
 }
 
-bool CampusCompass::toggleEdgeClosure(const string& location1, const string& location2) {
+bool Graph::toggleEdgeClosure(const string& location1, const string& location2) {
     for (auto& edge : edges) {
+        // Can be {vertex1, vertex2} or {vertex2, vertex1}
         if ((edge[0] == stoi(location1) && edge[1] == stoi(location2)) || (edge[0] == stoi(location2) && edge[1] == stoi(location1))) {
             edge[3] = !edge[3];
             return true;
@@ -111,8 +121,9 @@ bool CampusCompass::toggleEdgeClosure(const string& location1, const string& loc
     return false;
 }
 
-int CampusCompass::checkEdgeStatus(const string& location1, const string& location2) {
+int Graph::checkEdgeStatus(const string& location1, const string& location2) {
     for (auto edge : edges) {
+        // Can be {vertex1, vertex2} or {vertex2, vertex1}
         if ((edge[0] == stoi(location1) && edge[1] == stoi(location2)) || (edge[0] == stoi(location2) && edge[1] == stoi(location1))) {
             return edge[3];
         }
@@ -120,7 +131,7 @@ int CampusCompass::checkEdgeStatus(const string& location1, const string& locati
     return -1;
 }
 
-bool CampusCompass::isConnected(string location1, string location2) {
+bool Graph::isConnected(string location1, string location2) {
     std::unordered_set<int> visited;
     std::queue<int> q;
     q.push(stoi(location1));
@@ -148,7 +159,7 @@ bool CampusCompass::isConnected(string location1, string location2) {
     return false;
 }
 
-pair<int, vector<int>> CampusCompass::dijkstra(int start, int end) {
+pair<int, vector<int>> Graph::dijkstra(int start, int end) {
 
     unordered_map<int, int> dist;
     for (auto &item : locations) {
@@ -219,17 +230,14 @@ pair<int, vector<int>> CampusCompass::dijkstra(int start, int end) {
     return { dist[end], path };
 }
 
-vector<pair<string, int>> CampusCompass::printShortestEdges(int ID) { // Make sure to sort classes
+vector<pair<string, int>> Graph::printShortestEdges(int ID) { // Make sure to sort classes
     Student* student = students[ID];
     int start = stoi(student->locationID);
-
     vector<pair<string, int>> result;
 
     vector<string> classes = student->classes;
     sort(classes.begin(), classes.end()); // Sort for printing
-
     for (string& item : classes) {
-
         int locationID = classList[item]; // Already made sure classes existed when they were inserted
         pair<int, vector<int>> shortest = dijkstra(start, locationID);
         result.push_back({item, shortest.first});
@@ -244,7 +252,7 @@ vector<pair<string, int>> CampusCompass::printShortestEdges(int ID) { // Make su
     return result; // For potential testing
 }
 
-bool CampusCompass::printStudentZone(int ID) {
+bool Graph::printStudentZone(int ID) {
     if (students.find(ID) == students.end()) {
         return false;
     }
